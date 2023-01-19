@@ -36,6 +36,11 @@ public class Startup
     // NOTE add transient or scoped both will work
     services.AddTransient<AlbumsRepository>();
     services.AddTransient<AlbumsService>();
+
+    services.AddScoped<PicturesRepository>();
+    services.AddScoped<PicturesService>();
+    services.AddScoped<CollaboratorRepository>();
+    services.AddScoped<CollaboratorsService>();
   }
 
   private void ConfigureCors(IServiceCollection services)

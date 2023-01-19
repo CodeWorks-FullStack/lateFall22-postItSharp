@@ -6,11 +6,15 @@ public class AlbumsController : ControllerBase
 {
   private readonly AlbumsService _albumsService;
   private readonly Auth0Provider _auth0provider;
+  private readonly PicturesService _picturesService;
+  private readonly CollaboratorsService _collabService;
 
-  public AlbumsController(AlbumsService albumsService, Auth0Provider auth0provider)
+  public AlbumsController(AlbumsService albumsService, Auth0Provider auth0provider, PicturesService picturesService, CollaboratorsService collabService)
   {
     _albumsService = albumsService;
     _auth0provider = auth0provider;
+    _picturesService = picturesService;
+    _collabService = collabService;
   }
 
   [HttpGet]
@@ -41,6 +45,37 @@ public class AlbumsController : ControllerBase
     catch (Exception e)
     {
       return BadRequest(e.Message);
+    }
+  }
+
+  [HttpGet("{id}/pictures")]
+  public async Task<ActionResult<List<Picture>>> GetPictures(int id)
+  {
+    try
+    {
+      Account userInfo = await _auth0provider.GetUserInfoAsync<Account>(HttpContext);
+      List<Picture> pictures = _picturesService.GetPicturesByAlbum(id, userInfo?.Id);
+      return Ok(pictures);
+    }
+    catch (Exception e)
+    {
+      return BadRequest(e.Message);
+    }
+  }
+
+  [HttpGet("{id}/collaborators")]
+  public async Task<ActionResult<List<Collaborator>>> GetCollaborators(int id)
+  {
+    try
+    {
+      Account userInfo = await _auth0provider.GetUserInfoAsync<Account>(HttpContext);
+      List<Collaborator> collabs = _collabService.GetCollaborators(id, userInfo?.Id);
+      return Ok(collabs);
+    }
+    catch (Exception e)
+    {
+      return BadRequest(e.Message);
+      throw;
     }
   }
 

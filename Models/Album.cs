@@ -16,3 +16,8 @@ public class Album
 
   public Account Creator { get; set; }
 }
+
+public class MyAlbum : Album
+{
+  public int AlbumMemberId { get; set; }
+}

@@ -18,6 +18,32 @@ creatorId VARCHAR(255) NOT NULL,
 FOREIGN KEY (creatorId) REFERENCES accounts (id) ON DELETE CASCADE
 )default charset utf8 COMMENT '';
 
+
+CREATE TABLE IF NOT EXISTS pictures(
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  imgUrl VARCHAR(255) NOT NULL,
+  creatorId VARCHAR(255) NOT NULL,
+  albumId INT NOT NULL,
+
+  FOREIGN KEY (creatorId) REFERENCES accounts (id) ON DELETE CASCADE,
+  FOREIGN KEY (albumId) REFERENCES albums (id) ON DELETE CASCADE
+)default charset utf8 COMMENT '';
+
+CREATE TABLE albumMembers(
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  albumId INT NOT NULL,
+  accountId VARCHAR(255) NOT NULL,
+
+  Foreign Key (albumId) REFERENCES albums (id) ON DELETE CASCADE,
+  Foreign Key (accountId) REFERENCES accounts(id) ON DELETE CASCADE
+)default charset utf8;
+
+INSERT INTO `albumMembers`
+(`albumId`, `accountId`)
+VALUES
+(9, '6216b36ebc31a249987812b1');
+
+
 INSERT INTO albums
 (title,category,`coverImg`,`creatorId`)
 VALUES
@@ -34,3 +60,10 @@ ac.*
 FROM albums al
 JOIN accounts ac ON ac.id = al.creatorId
 WHERE al.archived = true;
+
+
+SELECT
+ac.*,
+am.id
+FROM albumMembers am
+JOIN accounts ac ON am.`accountId` = ac.id
